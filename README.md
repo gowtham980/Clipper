@@ -21,13 +21,39 @@ Native macOS clipboard manager — lightweight, fast, and private.
 brew install --cask gowtham980/tap/clipper
 ```
 
-### Direct download
+### Direct download (Recommended)
 
 1. Download the latest `Clipper-*.dmg` from the [Releases](https://github.com/gowtham980/Clipper/releases) page.
 2. Open the DMG and drag `Clipper.app` to `/Applications`.
-3. First launch: Right-click the app → **Open** (one-time Gatekeeper step because the app is ad-hoc signed).
+3. Double-click to launch.
 
-After that, Clipper lives in your menu bar.
+**v1.1.0 and later releases are fully notarized** — you should see **no warning**.
+
+### Homebrew (one command)
+
+```bash
+brew install --cask gowtham980/tap/clipper
+```
+
+After installation, Clipper appears in your menu bar (top right).
+
+### Building from source (developers)
+
+When you build from source you get an **ad-hoc signed** build. macOS will show a one-time Gatekeeper warning:
+
+```bash
+git clone https://github.com/gowtham980/Clipper.git
+cd Clipper
+swift run
+```
+
+**Bypass the warning** (one time):
+
+```bash
+xattr -dr com.apple.quarantine /path/to/Clipper.app
+```
+
+Or right-click → **Open** → **Open** again, or use **System Settings → Privacy & Security → Open Anyway**.
 
 ## Usage
 

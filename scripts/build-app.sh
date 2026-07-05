@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-VERSION="${1:-1.0.0}"
+VERSION="${1:-1.1.0}"
+SIGN_IDENTITY="${2:-}"
+
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BUILD_DIR="$ROOT/.build/release"
 APP_DIR="$ROOT/Clipper.app"
-ZIP_NAME="Clipper-$VERSION.zip"
 
 echo "==> Building release binary"
 swift build -c release --package-path "$ROOT"
@@ -17,7 +18,7 @@ mkdir -p "$APP_DIR/Contents/"{MacOS,Resources}
 cp "$BUILD_DIR/Clipper" "$APP_DIR/Contents/MacOS/Clipper"
 chmod +x "$APP_DIR/Contents/MacOS/Clipper"
 
-# Generate SF Symbol icon (doc.on.clipboard) as .icns
+# Generate SF Symbol icon
 ICON_DIR="$APP_DIR/Contents/Resources/Clipper.iconset"
 mkdir -p "$ICON_DIR"
 
@@ -42,7 +43,6 @@ for size in sizes {
     let file = "\(iconset)/icon_\(Int(size))x\(Int(size)).png"
     try! pngData.write(to: URL(fileURLWithPath: file))
     
-    // 2x retina
     let file2x = "\(iconset)/icon_\(Int(size))x\(Int(size))@2x.png"
     try! pngData.write(to: URL(fileURLWithPath: file2x))
 }
@@ -59,8 +59,14 @@ rm -rf "$ICON_DIR"
 # Copy Info.plist
 cp "$ROOT/Sources/Clipper/Info.plist" "$APP_DIR/Contents/Info.plist"
 
-# Ad-hoc sign
-codesign --force --deep --sign - "$APP_DIR"
+# Signing
+if [[ -n "$SIGN_IDENTITY" ]]; then
+  echo "==> Signing with: $SIGN_IDENTITY"
+  codesign --force --deep --options runtime --timestamp --sign "$SIGN_IDENTITY" "$APP_DIR"
+else
+  echo "==> Ad-hoc signing"
+  codesign --force --deep --sign - "$APP_DIR"
+fi
 
 echo "==> Creating DMG"
 cd "$ROOT"
