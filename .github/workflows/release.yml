@@ -24,4 +24,4 @@ jobs:
           gh release create "$GITHUB_REF" \
             --title "Clipper $VERSION" \
             --notes "Native macOS clipboard manager" \
-            Clipper-$VERSION.zip
+            Clipper-$VERSION.dmg

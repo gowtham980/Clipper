@@ -23,8 +23,8 @@ brew install --cask gowtham980/tap/clipper
 
 ### Direct download
 
-1. Download the latest `Clipper-*.zip` from the [Releases](https://github.com/gowtham980/Clipper/releases) page.
-2. Unzip and drag `Clipper.app` to `/Applications`.
+1. Download the latest `Clipper-*.dmg` from the [Releases](https://github.com/gowtham980/Clipper/releases) page.
+2. Open the DMG and drag `Clipper.app` to `/Applications`.
 3. First launch: Right-click the app → **Open** (one-time Gatekeeper step because the app is ad-hoc signed).
 
 After that, Clipper lives in your menu bar.

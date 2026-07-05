@@ -62,10 +62,10 @@ cp "$ROOT/Sources/Clipper/Info.plist" "$APP_DIR/Contents/Info.plist"
 # Ad-hoc sign
 codesign --force --deep --sign - "$APP_DIR"
 
-echo "==> Zipping"
+echo "==> Creating DMG"
 cd "$ROOT"
-zip -r -y "$ZIP_NAME" Clipper.app
+hdiutil create -volname "Clipper" -srcfolder Clipper.app -ov -format UDZO "Clipper-$VERSION.dmg"
 rm -rf Clipper.app
 
-echo "==> Done: $ZIP_NAME"
-shasum -a 256 "$ZIP_NAME" | tee "$ZIP_NAME.sha256"
+echo "==> Done: Clipper-$VERSION.dmg"
+shasum -a 256 "Clipper-$VERSION.dmg" | tee "Clipper-$VERSION.dmg.sha256"
