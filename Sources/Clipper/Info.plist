@@ -6,8 +6,10 @@
     <string>en</string>
     <key>CFBundleExecutable</key>
     <string>Clipper</string>
+    <key>CFBundleIconFile</key>
+    <string>Clipper</string>
     <key>CFBundleIdentifier</key>
-    <string>com.yourcompany.Clipper</string>
+    <string>com.gowtham980.Clipper</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>

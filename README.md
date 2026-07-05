@@ -12,17 +12,22 @@ Native macOS clipboard manager — lightweight, fast, and private.
 ## Requirements
 
 - macOS 13 Ventura or later
-- Xcode Command Line Tools (or full Xcode)
 
-## Quick Start
+## Install (no Xcode needed)
+
+### Homebrew (recommended)
 
 ```bash
-git clone https://github.com/gowtham980/Clipper.git
-cd Clipper
-swift run
+brew install --cask gowtham980/tap/clipper
 ```
 
-The first run builds the app and launches it in the menu bar.
+### Direct download
+
+1. Download the latest `Clipper-*.zip` from the [Releases](https://github.com/gowtham980/Clipper/releases) page.
+2. Unzip and drag `Clipper.app` to `/Applications`.
+3. First launch: Right-click the app → **Open** (one-time Gatekeeper step because the app is ad-hoc signed).
+
+After that, Clipper lives in your menu bar.
 
 ## Usage
 
@@ -31,13 +36,20 @@ The first run builds the app and launches it in the menu bar.
 3. Search or browse history, pin important clips, or tap any row to re-copy it.
 4. Open **Settings…** from the footer to change the global hotkey.
 
-## Build from Source
+## Build from Source (developers)
+
+```bash
+git clone https://github.com/gowtham980/Clipper.git
+cd Clipper
+swift run
+```
+
+Or build a release binary:
 
 ```bash
 swift build -c release
+# binary at .build/release/Clipper
 ```
-
-The binary is at `.build/release/Clipper`.
 
 ## License
 
