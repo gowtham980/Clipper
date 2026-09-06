@@ -26,7 +26,7 @@ Most clipboard managers either store everything in plaintext (including keys you
 brew install --cask gowtham980/tap/clipper
 ```
 
-This installs **0.2.0** (secret-aware rewrite). The cask DMG is **ad-hoc signed**, not Apple-notarized — Gatekeeper may warn once.
+This installs **0.2.1** (secret-aware rewrite). The cask DMG is **ad-hoc signed**, not Apple-notarized — Gatekeeper may warn once.
 
 If macOS blocks it:
 
@@ -44,7 +44,7 @@ brew update && brew upgrade --cask gowtham980/tap/clipper
 
 ### Direct download
 
-Grab `Clipper-0.2.0.dmg` from [Releases](https://github.com/gowtham980/Clipper/releases). Older `v1.0.x` tags are the pre-rewrite history-only app.
+Grab `Clipper-0.2.1.dmg` from [Releases](https://github.com/gowtham980/Clipper/releases). Older `v1.0.x` tags are the pre-rewrite history-only app.
 
 ### Build from source
 

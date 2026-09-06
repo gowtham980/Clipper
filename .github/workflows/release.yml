@@ -14,17 +14,18 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build app bundle
-        run: ./scripts/build-app.sh "${GITHUB_REF#refs/tags/v}"
+        run: ./scripts/build-app.sh "${GITHUB_REF_NAME#v}"
 
       - name: Publish Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION="${GITHUB_REF#refs/tags/v}"
-          if gh release view "$GITHUB_REF" >/dev/null 2>&1; then
-            gh release upload "$GITHUB_REF" "Clipper-$VERSION.dmg" --clobber
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "Clipper-$VERSION.dmg" --clobber
           else
-            gh release create "$GITHUB_REF" \
+            gh release create "$TAG" \
               --title "Clipper $VERSION" \
               --notes "Native macOS clipboard manager (ad-hoc signed). Gatekeeper may warn until notarized." \
               "Clipper-$VERSION.dmg"
