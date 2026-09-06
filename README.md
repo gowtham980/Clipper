@@ -63,7 +63,7 @@ Images: `~/Library/Application Support/Clipper/images/`
 ## Use cases
 
 1. **Recover the snippet** — You copied a URL, then a token, then a stack trace. Hit ⌘⇧V, search `error` (or `UserService`), click the trace, paste into the issue tracker.
-2. **Do not keep the key** — You copy a `ghp_` or `AKIA…` key. With default **Skip secrets**, history does not store it; the footer shows `skipped N secrets` for the session. Switch to **Redact** if you want a placeholder row instead.
+2. **Do not keep the key** — You copy a `ghp_` or `AKIA…` key. With default **Skip secrets**, history does not store it; the footer shows `skipped N sensitive clips` for the session. Switch to **Redact** if you want a placeholder row instead.
 3. **Pretty-print JSON** — Copy a minified API payload, right-click → Transform → JSON pretty-print, paste into your editor. Invalid JSON shows an in-popover error instead of crashing.
 4. **Ignore the password manager** — 1Password / Bitwarden / LastPass / Dashlane / Apple Passwords bundle IDs ship in the default ignore list so vault copies never enter history.
 

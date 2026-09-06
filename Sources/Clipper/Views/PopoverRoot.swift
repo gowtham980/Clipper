@@ -80,12 +80,12 @@ struct PopoverRoot: View {
                     Text("\(store.items.count) clips")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    if store.secretsSkippedThisSession > 0 {
-                        Text("skipped \(store.secretsSkippedThisSession) secrets")
+                    if store.sensitiveSkippedThisSession > 0 {
+                        Text("skipped \(store.sensitiveSkippedThisSession) sensitive clips")
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                             .accessibilityLabel(
-                                "Skipped \(store.secretsSkippedThisSession) secrets this session"
+                                "Skipped \(store.sensitiveSkippedThisSession) sensitive clips this session"
                             )
                     }
                 }

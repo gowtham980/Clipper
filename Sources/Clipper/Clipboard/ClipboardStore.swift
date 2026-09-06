@@ -1,11 +1,12 @@
 import Foundation
+import Combine
 import AppKit
 
 @MainActor
 final class ClipboardStore: ObservableObject {
     @Published private(set) var items: [ClipItem] = []
     @Published var searchText: String = ""
-    @Published private(set) var secretsSkippedThisSession: Int = 0
+    @Published private(set) var sensitiveSkippedThisSession: Int = 0
     @Published var transformError: String?
     @Published private(set) var settings: AppSettings
 
@@ -15,6 +16,7 @@ final class ClipboardStore: ObservableObject {
     private let storageURL: URL
     private let imagesDirectory: URL
     private let fileManager: FileManager
+    private var cancellables = Set<AnyCancellable>()
 
     private static let concealedType = NSPasteboard.PasteboardType("org.nspasteboard.ConcealedType")
     private static let transientType = NSPasteboard.PasteboardType("org.nspasteboard.TransientType")
@@ -69,6 +71,13 @@ final class ClipboardStore: ObservableObject {
         self.lastChangeCount = NSPasteboard.general.changeCount
         try? fileManager.createDirectory(at: imagesDirectory, withIntermediateDirectories: true)
         load()
+        settings.$historyLimit
+            .dropFirst()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.trimToCurrentLimit()
+            }
+            .store(in: &cancellables)
     }
 
     func startMonitoring() {
@@ -125,7 +134,7 @@ final class ClipboardStore: ObservableObject {
         switch decision {
         case .skip(let reason):
             if reason == "secret" || reason == "concealed_or_transient" {
-                secretsSkippedThisSession += 1
+                sensitiveSkippedThisSession += 1
             }
             return
         case .capture(let text, let redacted):
@@ -161,6 +170,19 @@ final class ClipboardStore: ObservableObject {
             redacted: redacted
         )
         insert(item)
+    }
+
+    func trimToCurrentLimit() {
+        let beforeIds = Set(items.map(\.id))
+        let next = items.clippedToHistoryLimit(settings.historyLimit)
+        guard next != items else { return }
+        let afterIds = Set(next.map(\.id))
+        let removed = beforeIds.subtracting(afterIds)
+        for old in items where removed.contains(old.id) {
+            deleteImageFileIfNeeded(old)
+        }
+        items = next
+        save()
     }
 
     private func insert(_ item: ClipItem) {
