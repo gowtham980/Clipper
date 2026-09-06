@@ -18,48 +18,17 @@ mkdir -p "$APP_DIR/Contents/"{MacOS,Resources}
 cp "$BUILD_DIR/Clipper" "$APP_DIR/Contents/MacOS/Clipper"
 chmod +x "$APP_DIR/Contents/MacOS/Clipper"
 
-# Generate SF Symbol icon
-ICON_DIR="$APP_DIR/Contents/Resources/Clipper.iconset"
-mkdir -p "$ICON_DIR"
-
-swift - <<'SWIFT' "$ICON_DIR"
-import AppKit
-
-let iconset = CommandLine.arguments[1]
-let symbolName = "doc.on.clipboard"
-let sizes: [CGFloat] = [16, 32, 128, 256, 512]
-
-for size in sizes {
-    let image = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil)!
-    let config = NSImage.SymbolConfiguration(pointSize: size, weight: .regular)
-    let configured = image.withSymbolConfiguration(config)!
-    
-    let cgImage = configured.cgImage(forProposedRect: nil, context: nil, hints: nil)!
-    let bitmap = NSBitmapImageRep(cgImage: cgImage)
-    bitmap.size = NSSize(width: size, height: size)
-    
-    let pngData = bitmap.representation(using: .png, properties: [:])!
-    
-    let file = "\(iconset)/icon_\(Int(size))x\(Int(size)).png"
-    try! pngData.write(to: URL(fileURLWithPath: file))
-    
-    let file2x = "\(iconset)/icon_\(Int(size))x\(Int(size))@2x.png"
-    try! pngData.write(to: URL(fileURLWithPath: file2x))
-}
-print("Iconset generated")
-SWIFT
-
-if iconutil -c icns -o "$APP_DIR/Contents/Resources/Clipper.icns" "$ICON_DIR" 2>/dev/null; then
-  echo "Custom icon created"
+# SF Symbol → icns via `swift -` JIT is unreliable (AppKit symbols missing).
+# Prefer a prebuilt icns if present; otherwise ship without a custom icon.
+if [[ -f "$ROOT/Sources/Clipper/Clipper.icns" ]]; then
+  cp "$ROOT/Sources/Clipper/Clipper.icns" "$APP_DIR/Contents/Resources/Clipper.icns"
+  echo "Using Sources/Clipper/Clipper.icns"
 else
-  echo "Skipping custom icon (iconutil failed)"
+  echo "Skipping custom icon (no Clipper.icns; menu bar uses SF Symbol at runtime)"
 fi
-rm -rf "$ICON_DIR"
 
-# Copy Info.plist
 cp "$ROOT/Sources/Clipper/Info.plist" "$APP_DIR/Contents/Info.plist"
 
-# Signing
 if [[ -n "$SIGN_IDENTITY" ]]; then
   echo "==> Signing with: $SIGN_IDENTITY"
   codesign --force --deep --options runtime --timestamp --sign "$SIGN_IDENTITY" "$APP_DIR"

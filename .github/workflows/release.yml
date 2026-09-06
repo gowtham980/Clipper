@@ -16,12 +16,16 @@ jobs:
       - name: Build app bundle
         run: ./scripts/build-app.sh "${GITHUB_REF#refs/tags/v}"
 
-      - name: Create Release
+      - name: Publish Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${GITHUB_REF#refs/tags/v}"
-          gh release create "$GITHUB_REF" \
-            --title "Clipper $VERSION" \
-            --notes "Native macOS clipboard manager" \
-            Clipper-$VERSION.dmg
+          if gh release view "$GITHUB_REF" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF" "Clipper-$VERSION.dmg" --clobber
+          else
+            gh release create "$GITHUB_REF" \
+              --title "Clipper $VERSION" \
+              --notes "Native macOS clipboard manager (ad-hoc signed). Gatekeeper may warn until notarized." \
+              "Clipper-$VERSION.dmg"
+          fi

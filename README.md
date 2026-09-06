@@ -20,9 +20,33 @@ Most clipboard managers either store everything in plaintext (including keys you
 
 ## Install
 
-### Build from source (current recommended path)
+### Homebrew (recommended)
 
-There is **no notarized App Store-style release for this secret-aware rewrite yet**. Older GitHub tags (`v1.0.x`) predate this work and are plain history-only builds.
+```bash
+brew install --cask gowtham980/tap/clipper
+```
+
+This installs **0.2.0** (secret-aware rewrite). The cask DMG is **ad-hoc signed**, not Apple-notarized — Gatekeeper may warn once.
+
+If macOS blocks it:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/Clipper.app
+```
+
+Or right-click → **Open** → **Open**, or **System Settings → Privacy & Security → Open Anyway**.
+
+Upgrade later:
+
+```bash
+brew update && brew upgrade --cask gowtham980/tap/clipper
+```
+
+### Direct download
+
+Grab `Clipper-0.2.0.dmg` from [Releases](https://github.com/gowtham980/Clipper/releases). Older `v1.0.x` tags are the pre-rewrite history-only app.
+
+### Build from source
 
 ```bash
 git clone https://github.com/gowtham980/Clipper.git
@@ -30,24 +54,6 @@ cd Clipper
 swift build -c release
 swift run
 ```
-
-Or package an ad-hoc `.app` / `.dmg` (Gatekeeper will warn until you notarize on your own account):
-
-```bash
-./scripts/build-app.sh 0.2.0
-```
-
-**Bypass a one-time Gatekeeper warning** if needed:
-
-```bash
-xattr -dr com.apple.quarantine /path/to/Clipper.app
-```
-
-Or right-click → **Open** → **Open**, or **System Settings → Privacy & Security → Open Anyway**.
-
-### Direct download
-
-Check [Releases](https://github.com/gowtham980/Clipper/releases) for whatever is published. Prefer building `main` until a signed 0.2.x (or later) tag exists.
 
 ## Usage
 
