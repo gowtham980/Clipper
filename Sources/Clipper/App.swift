@@ -1,13 +1,14 @@
 import SwiftUI
-import KeyboardShortcuts
 
 @main
 struct ClipperApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
+        // Settings scene keeps the standard macOS Settings menu path available.
+        // Primary entry is the dedicated NSWindow from StatusItemController.
         Settings {
-            EmptyView()
+            SettingsView()
         }
     }
 }
@@ -18,7 +19,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var store: ClipboardStore!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        store = ClipboardStore()
+        // Ensure shared settings exist before store reads them.
+        _ = AppSettings.shared
+        store = ClipboardStore(settings: .shared)
         statusItemController = StatusItemController(store: store)
         store.startMonitoring()
     }

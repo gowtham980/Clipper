@@ -1,8 +1,8 @@
-import Testing
-@testable import Clipper
+import XCTest
 
-@Test func example() async throws {
-    // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-    // Swift Testing Documentation
-    // https://developer.apple.com/documentation/testing
+/// Bundle anchor for the ClipperTests target. Feature tests live in sibling files.
+final class ClipperTests: XCTestCase {
+    func testXCTestHarnessLoads() {
+        XCTAssertTrue(true)
+    }
 }
